@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant LD HOLDINGS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Container du Chat */
+        .chat-container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 85vh;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* En-tête Amélioré */
+        .chat-header {
+            background: linear-gradient(135deg, #004a99 0%, #003366 100%);
+            color: white;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0, 74, 153, 0.2);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .header-info h5 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .header-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+
+        .header-close:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        /* Zone de messages */
+        #chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #chat-box::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        #chat-box::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        #chat-box::-webkit-scrollbar-thumb:hover {
+            background: #004a99;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #004a99 0%, #003366 100%);
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+            box-shadow: 0 4px 12px rgba(0, 74, 153, 0.2);
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-radius: 18px 18px 18px 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Zone de saisie */
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+
+        .btn-send {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .btn-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-send:active {
+            transform: scale(0.95);
+        }
+
+        /* Animation de chargement */
+        .typing-indicator {
+            display: none;
+            padding: 12px 18px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 18px;
+            width: fit-content;
+            align-self: flex-start;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #667eea;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.6;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chat-container {
+                height: 90vh;
+                border-radius: 15px;
+            }
+
+            .message {
+                max-width: 85%;
+                font-size: 0.9rem;
+            }
+
+            .chat-header {
+                padding: 15px;
+            }
+
+            .header-info h5 {
+                font-size: 1rem;
+            }
+
+            .status-indicator {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Effets spéciaux */
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin: 10px 0;
+        }
+
+        .error-message {
+            background: #ffe6e6;
+            color: #c41e3a;
+            border-left: 4px solid #c41e3a;
+        }
+
+        .success-message {
+            background: #e6ffe6;
+            color: #2d7a2d;
+            border-left: 4px solid #2ecc71;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <!-- En-tête -->
+    <div class="chat-header">
+        <div class="header-left">
+            <div class="header-logo">
+                <i class="bi bi-building"></i>
+            </div>
+            <div class="header-info">
+                <h5>LD HOLDINGS Assistant</h5>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>En ligne | Abidjan</span>
+                </div>
+            </div>
+        </div>
+        <div class="header-close" onclick="minimizeChat()">
+            <i class="bi bi-dash-lg"></i>
+        </div>
+    </div>
+
+    <!-- Zone de messages -->
+    <div id="chat-box">
+        <div class="message bot-message welcome-message">
+            <i class="bi bi-chat-dots"></i>
+            <br><br>
+            Bonjour ! Je suis l'assistant virtuel de <strong>LD HOLDINGS</strong>. 
+            <br>Comment puis-je vous aider aujourd'hui ?
+        </div>
+    </div>
+
+    <!-- Indicateur de chargement -->
+    <div id="typing-indicator" class="typing-indicator px-4">
+        <div class="typing-dots">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    </div>
+
+    <!-- Zone de saisie -->
+    <div class="input-area">
+        <input 
+            type="text" 
+            id="user-input" 
+            class="form-control" 
+            placeholder="Écrivez votre message ici..." 
+            onkeypress="handleKeyPress(event)"
+            autocomplete="off"
+        >
+        <button class="btn-send" onclick="sendMessage()" title="Envoyer">
+            <i class="bi bi-send-fill"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+function handleKeyPress(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
+}
+
+function sendMessage() {
+    const inputField = document.getElementById("user-input");
+    const chatBox = document.getElementById("chat-box");
+    const typingIndicator = document.getElementById("typing-indicator");
+    const msg = inputField.value.trim();
+
+    if (msg === "") return;
+
+    
+    const userMsgDiv = document.createElement("div");
+    userMsgDiv.className = "message user-message";
+    userMsgDiv.textContent = msg;
+    chatBox.appendChild(userMsgDiv);
+
+    inputField.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+    typingIndicator.style.display = "block";
+
+    fetch("/api/chat/", {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie('csrftoken')
+        },
+        body: JSON.stringify({ message: msg })
+    })
+    .then(res => res.json())
+    .then(data => {
+        typingIndicator.style.display = "none";
+        
+        const botMsgDiv = document.createElement("div");
+        botMsgDiv.className = "message bot-message";
+        botMsgDiv.innerHTML = data.response;
+        chatBox.appendChild(botMsgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    })
+    .catch(error => {
+        typingIndicator.style.display = "none";
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "message bot-message error-message";
+        errorDiv.textContent = "Erreur : Impossible de se connecter au serveur.";
+        chatBox.appendChild(errorDiv);
+        console.error('Erreur:', error);
+    });
+}
+
+function minimizeChat() {
+    console.log("Chat minimisé");
+    // Vous pouvez ajouter la logique de minimisation ici
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Focus sur l'input au chargement
+window.addEventListener('load', () => {
+    document.getElementById("user-input").focus();
+});
+</script>
+
+</body>
+</html>
+
+
+
+{% comment %} <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant LD HOLDINGS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Container du Chat */
+        .chat-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        /* En-tête */
+        .chat-header {
+            background: #004a99; /* Bleu professionnel */
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Zone de messages */
+        #chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: #004a99;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: white;
+            color: #333;
+            border: 1px solid #dee2e6;
+            border-bottom-left-radius: 5px;
+        }
+
+        /* Zone de saisie */
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #004a99;
+        }
+
+        /* Animation de chargement */
+        .typing {
+            font-style: italic;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <div class="bg-light rounded-circle p-2">
+            <i class="bi bi-building-fill text-primary fs-4"></i>
+        </div>
+        <div>
+            <h5 class="mb-0">LD HOLDINGS Assistant</h5>
+            <small><span class="status-dot"></span> En ligne | Abidjan</small>
+        </div>
+    </div>
+
+    <div id="chat-box">
+        <div class="message bot-message">
+            Bonjour ! Je suis l'assistant virtuel de <strong>LD HOLDINGS</strong>. Comment puis-je vous aider aujourd'hui ?
+        </div>
+    </div>
+
+    <div id="typing-indicator" class="px-4 typing">L'assistant réfléchit...</div>
+
+    <div class="input-area">
+        <input type="text" id="user-input" class="form-control" placeholder="Écrivez votre message ici..." onkeypress="handleKeyPress(event)">
+        <button class="btn btn-primary px-4" onclick="sendMessage()">
+            <i class="bi bi-send"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+// Fonction pour gérer la touche "Entrée"
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+function sendMessage() {
+    const inputField = document.getElementById("user-input");
+    const chatBox = document.getElementById("chat-box");
+    const typingIndicator = document.getElementById("typing-indicator");
+    const msg = inputField.value.trim();
+
+    if (msg === "") return;
+
+    // Afficher le message utilisateur
+    chatBox.innerHTML += `
+        <div class="message user-message animate__animated animate__fadeInUp">
+            ${msg}
+        </div>
+    `;
+
+    // Vider l'input et scroller
+    inputField.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Afficher l'indicateur de chargement
+    typingIndicator.style.display = "block";
+
+    
+    fetch("/api/chat/", {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie('csrftoken')
+        },
+        body: JSON.stringify({ message: msg })
+    })
+    .then(res => res.json())
+    .then(data => {
+        typingIndicator.style.display = "none";
+        
+        // Afficher la réponse du bot
+        chatBox.innerHTML += `
+            <div class="message bot-message animate__animated animate__fadeIn">
+                ${data.response}
+            </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    })
+    .catch(error => {
+        typingIndicator.style.display = "none";
+        console.error('Erreur:', error);
+    });
+}
+
+// Fonction utilitaire pour récupérer le token CSRF de Django
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+</body>
+</html> {% endcomment %}
+
+{% comment %} <!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot LD HOLDINGS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+
+<h3>Assistant LD HOLDINGS</h3>
+
+<div id="chat-box" class="border p-3 mb-3" style="height:300px; overflow-y:auto;"></div>
+
+<input id="message" class="form-control" placeholder="Votre message..." />
+<button class="btn btn-primary mt-2" onclick="sendMessage()">Envoyer</button>
+
+<script>
+function sendMessage() {
+    const msg = document.getElementById("message").value;
+    document.getElementById("chat-box").innerHTML += `<p><b>Vous:</b> ${msg}</p>`;
+
+    fetch("/api/chat/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("chat-box").innerHTML += `<p><b>Bot:</b> ${data.response}</p>`;
+    });
+
+    document.getElementById("message").value = "";
+}
+</script>
+
+</body>
+</html> {% endcomment %}
