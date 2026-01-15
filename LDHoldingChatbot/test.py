@@ -2,7 +2,7 @@
 # import os
 
 # # Remplacez par votre clé directement pour le test
-# API_KEY = "AIzaSyDgFEyYy3ubb10eW9zqbzYGOVnIwf5Z2TY" 
+# API_KEY = 
 # genai.configure(api_key=API_KEY)
 
 # print("--- Modèles accessibles avec cette clé ---")
